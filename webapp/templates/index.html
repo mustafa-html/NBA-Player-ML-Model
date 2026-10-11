@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+{% block content %}
+<section class="intro">
+  <h1>Find players who play the same way</h1>
+  <p>Every qualifying player-season since 2015–16 is described by 17 playstyle rates: where he shoots from, how often he creates his own shot, passes, rebounds and defends. K-Means groups them into archetypes, and cosine similarity finds each player's closest matches.</p>
+  <form class="big-search" action="{{ url_for('player_page') }}" method="get">
+    <label>Player<input name="name" list="players" placeholder="e.g. Jalen Brunson" required></label>
+    <label>Season
+      <select name="season">
+        <option value="">Latest qualifying</option>
+        {% for s in seasons %}<option value="{{ s }}">{{ s - 1 }}–{{ '%02d' % (s % 100) }}</option>{% endfor %}
+      </select>
+    </label>
+    <label>Compare against
+      <select name="scope"><option value="season">Same season</option><option value="all">Any season</option></select>
+    </label>
+    <button type="submit">Find matches</button>
+  </form>
+</section>
+
+<section>
+  <h2>Archetypes in {{ latest - 1 }}–{{ '%02d' % (latest % 100) }}</h2>
+  <div class="archetypes">
+    {% for a in archetypes %}
+    <article class="archetype">
+      <h3>{{ a.name }} <span class="count">{{ a.count }} players</span></h3>
+      <p>{{ a.traits | join('; ') }}</p>
+      <p class="examples">
+        {%- for e in a.examples %}<a href="{{ url_for('player_page', name=e, season=latest) }}">{{ e }}</a>{% if not loop.last %}, {% endif %}{% endfor -%}
+      </p>
+    </article>
+    {% endfor %}
+  </div>
+</section>
+
+<section>
+  <h2>Model reports</h2>
+  <div class="reports">
+    <figure><img src="{{ url_for('report_file', filename='playstyle_map.png') }}" alt="Playstyle map of the latest season, coloured by archetype"><figcaption>Every player in the latest season, projected to two dimensions.</figcaption></figure>
+    <figure><img src="{{ url_for('report_file', filename='archetype_heatmap.png') }}" alt="Heatmap of archetype centroids"><figcaption>What defines each archetype, in standard deviations from league average.</figcaption></figure>
+    <figure><img src="{{ url_for('report_file', filename='archetype_trend.png') }}" alt="Archetype share by season"><figcaption>How the mix of playstyles has shifted since 2016.</figcaption></figure>
+    <figure><img src="{{ url_for('report_file', filename='k_selection.png') }}" alt="Inertia and silhouette by number of clusters"><figcaption>How the number of clusters was chosen.</figcaption></figure>
+  </div>
+</section>
+{% endblock %}

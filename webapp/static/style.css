@@ -1,0 +1,135 @@
+/* Visual language: a stat sheet crossed with a court diagram.
+   - Type: Oswald (condensed, scoreboard/jersey) for headings and figures;
+     IBM Plex Sans for reading text. Tabular numerals everywhere numbers line up.
+   - Colour: cool paper and slate court lines, with the two radar-chart colours
+     (leather orange, court blue) reused as the compare pair so the charts and
+     the interface speak the same language.
+   - The one loud element is the match bar behind each similarity score.     */
+
+:root {
+  --paper:   #f1f4f7;
+  --card:    #ffffff;
+  --ink:     #1b2430;
+  --muted:   #5f6c7b;
+  --line:    #c9d3dd;
+  --ball:    #cc4b1f;   /* the player you searched for */
+  --court:   #1d4ed8;   /* the player he's compared with */
+  --bar:     #e3ebf2;
+
+  --sans: "IBM Plex Sans", -apple-system, "Segoe UI", Roboto, sans-serif;
+  --display: "Oswald", "Haettenschweiler", "Arial Narrow", var(--sans);
+}
+
+* { box-sizing: border-box; }
+
+html { -webkit-text-size-adjust: 100%; }
+
+body {
+  margin: 0;
+  background: var(--paper);
+  color: var(--ink);
+  font: 400 16px/1.55 var(--sans);
+}
+
+h1, h2, h3, th, .display { font-family: var(--display); font-weight: 500; letter-spacing: .01em; }
+h1 { font-size: clamp(1.9rem, 4vw, 2.6rem); line-height: 1.1; margin: 0 0 .3rem; }
+h2 { font-size: 1.4rem; margin: 2.5rem 0 .9rem; }
+h3 { font-size: 1.05rem; margin: 0 0 .25rem; }
+p { margin: .35rem 0; }
+
+a { color: var(--court); text-underline-offset: 2px; }
+a:hover { color: var(--ball); }
+:focus-visible { outline: 3px solid var(--ball); outline-offset: 2px; }
+.sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
+
+/* ---- header: a court sideline, double rule ---- */
+header.site {
+  display: flex; flex-wrap: wrap; gap: 1rem; align-items: center; justify-content: space-between;
+  padding: .85rem 1.5rem; background: var(--ink); color: #fff;
+  border-bottom: 4px double rgba(255, 255, 255, .35);
+}
+.brand { font-family: var(--display); font-size: 1.15rem; color: #fff; text-decoration: none; }
+.brand:hover { color: #fff; }
+.search { display: flex; gap: .4rem; }
+
+input, select {
+  font: inherit; padding: .5rem .65rem; color: var(--ink);
+  background: var(--card); border: 1px solid var(--line); border-radius: 2px;
+}
+button {
+  font: 500 1rem/1 var(--display); letter-spacing: .02em;
+  padding: .62rem 1.1rem; border: 0; border-radius: 2px;
+  background: var(--ball); color: #fff; cursor: pointer;
+}
+button:hover { background: #a93c15; }
+
+main { max-width: 1140px; margin: 0 auto; padding: 1.75rem 1.5rem 0; }
+
+/* ---- home ---- */
+.intro p { max-width: 68ch; color: var(--muted); }
+.big-search {
+  display: flex; flex-wrap: wrap; gap: .85rem; align-items: end;
+  margin: 1.25rem 0 .5rem; padding: 1.1rem; background: var(--card);
+  border: 1px solid var(--line); border-left: 5px solid var(--ball);
+}
+.big-search label { display: flex; flex-direction: column; gap: .25rem; font-size: .84rem; color: var(--muted); }
+.big-search input { min-width: 15rem; }
+
+.archetypes { display: grid; grid-template-columns: repeat(auto-fill, minmax(255px, 1fr)); gap: .75rem; }
+.archetype { background: var(--card); border: 1px solid var(--line); padding: .85rem 1rem; }
+.archetype p { font-size: .9rem; color: var(--muted); }
+.count { font-family: var(--sans); font-size: .78rem; font-weight: 400; color: var(--muted); }
+.examples a { margin-right: .15rem; }
+
+.reports { display: grid; grid-template-columns: repeat(auto-fill, minmax(430px, 1fr)); gap: 1rem; }
+figure { margin: 0; background: var(--card); border: 1px solid var(--line); padding: .7rem; }
+figure img { display: block; width: 100%; height: auto; }
+figcaption { margin-top: .4rem; font-size: .85rem; color: var(--muted); }
+
+/* ---- player ---- */
+.player-head {
+  display: flex; flex-wrap: wrap; gap: 1.5rem; justify-content: space-between; align-items: flex-start;
+  background: var(--card); border: 1px solid var(--line); border-top: 5px solid var(--ball); padding: 1.1rem 1.25rem;
+}
+.meta { color: var(--muted); font-size: .92rem; }
+.line { font-variant-numeric: tabular-nums; }
+.archetype-badge { max-width: 24rem; padding: .7rem .95rem; background: var(--ink); color: #fff; }
+.archetype-badge span { font-family: var(--display); font-size: 1.45rem; }
+.archetype-badge p { margin-top: .2rem; color: #ccd6e0; font-size: .88rem; }
+.seasons { font-size: .88rem; color: var(--muted); margin-top: .6rem; }
+.seasons a { margin-right: .45rem; }
+
+.grid { display: grid; grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr); gap: 1.5rem; margin-top: 1.25rem; }
+.tabs { display: flex; gap: .4rem; margin-bottom: .6rem; }
+.tabs a {
+  padding: .35rem .8rem; font-size: .88rem; text-decoration: none; color: var(--ink);
+  background: var(--card); border: 1px solid var(--line);
+}
+.tabs a.on { background: var(--ink); border-color: var(--ink); color: #fff; }
+
+table { width: 100%; border-collapse: collapse; background: var(--card); border: 1px solid var(--line); }
+th, td { padding: .42rem .6rem; text-align: left; border-bottom: 1px solid var(--line); }
+th { font-size: .82rem; color: var(--muted); background: #e9eef3; }
+tbody tr:last-child td { border-bottom: 0; }
+.num { text-align: right; font-variant-numeric: tabular-nums; }
+
+/* the one loud element: the bar is the score */
+.match { position: relative; width: 5.2rem; padding-right: .7rem; }
+.match .fill { position: absolute; inset: 3px auto 3px 0; background: var(--bar); border-left: 3px solid var(--ball); }
+.match .val { position: relative; font-family: var(--display); font-size: 1rem; }
+
+.arch { white-space: nowrap; }
+.note { font-size: .82rem; color: var(--muted); }
+.charts { display: flex; flex-direction: column; gap: 1rem; }
+
+footer {
+  max-width: 1140px; margin: 2.5rem auto 0; padding: 1rem 1.5rem 2rem;
+  border-top: 1px solid var(--line); font-size: .82rem; color: var(--muted);
+}
+
+@media (max-width: 880px) {
+  .grid, .reports { grid-template-columns: 1fr; }
+  header.site { justify-content: flex-start; }
+  .search { width: 100%; }
+  .search input { flex: 1; min-width: 0; }
+}

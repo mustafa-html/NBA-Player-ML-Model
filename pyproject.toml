@@ -1,0 +1,10 @@
+[project]
+name = "nba-playstyle-engine"
+version = "1.0.0"
+description = "Find NBA players with similar playing styles using unsupervised clustering"
+requires-python = ">=3.10"
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["."]
+filterwarnings = ["ignore::FutureWarning"]

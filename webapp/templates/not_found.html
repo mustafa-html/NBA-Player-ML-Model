@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+{% block content %}
+<section class="intro">
+  <h1>No qualifying season for “{{ name }}”{% if season %} in {{ season }}{% endif %}</h1>
+  <p>Players need at least 500 minutes and 20 games in a season to be included.</p>
+  {% if suggestions %}
+  <p>Did you mean:
+    {%- for s in suggestions %}<a href="{{ url_for('player_page', name=s) }}">{{ s }}</a>{% if not loop.last %}, {% endif %}{% endfor -%}?
+  </p>
+  {% endif %}
+</section>
+{% endblock %}

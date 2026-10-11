@@ -1,0 +1,62 @@
+{% extends "base.html" %}
+{% block title %}{{ p.player }} ({{ p.season }}) · Playstyle matches{% endblock %}
+{% block content %}
+<section class="player-head">
+  <div>
+    <h1>{{ p.player }}</h1>
+    <p class="meta">{{ p.season - 1 }}–{{ '%02d' % (p.season % 100) }} season, {{ p.teams or '' }}, {{ p.position }}, {{ p.games }} games</p>
+    <p class="line">{{ p.per_game.points }} pts, {{ p.per_game.rebounds }} reb, {{ p.per_game.assists }} ast in {{ p.per_game.minutes }} min</p>
+  </div>
+  <div class="archetype-badge">
+    <span>{{ p.archetype }}</span>
+    <p>{{ p.traits | join('; ') }}</p>
+  </div>
+</section>
+
+{% if other_seasons|length > 1 %}
+<p class="seasons">Other seasons:
+  {% for s in other_seasons %}{% if s != p.season %}<a href="{{ url_for('player_page', name=p.player, season=s, scope=scope) }}">{{ s - 1 }}–{{ '%02d' % (s % 100) }}</a> {% endif %}{% endfor %}
+</p>
+{% endif %}
+
+<section class="grid">
+  <div>
+    <div class="tabs">
+      <a class="{{ 'on' if scope == 'season' }}" href="{{ url_for('player_page', name=p.player, season=p.season, scope='season') }}">Same season</a>
+      <a class="{{ 'on' if scope == 'all' }}" href="{{ url_for('player_page', name=p.player, season=p.season, scope='all') }}">Any season, {{ first }}–{{ last }}</a>
+    </div>
+    <table>
+      <thead><tr><th class="match">Match</th><th>Player</th><th>Season</th><th>Archetype</th><th class="num">Pts</th><th class="num">Ast</th><th class="num">Reb</th></tr></thead>
+      <tbody>
+      {% for m in matches %}
+        <tr>
+          <td class="match">
+            <span class="fill" style="width: {{ '%.0f' % (m.similarity if m.similarity > 0 else 0) }}%"></span>
+            <span class="val">{{ '%.0f' % m.similarity }}%</span>
+          </td>
+          <td><a href="{{ url_for('player_page', name=m.player, season=m.season) }}">{{ m.player }}</a></td>
+          <td>{{ m.season }}</td>
+          <td class="arch">{{ m.archetype }}</td>
+          <td class="num">{{ '%.1f' % m.pts_per_game if m.pts_per_game is not none else '—' }}</td>
+          <td class="num">{{ '%.1f' % m.ast_per_game if m.ast_per_game is not none else '—' }}</td>
+          <td class="num">{{ '%.1f' % m.trb_per_game if m.trb_per_game is not none else '—' }}</td>
+        </tr>
+      {% endfor %}
+      </tbody>
+    </table>
+    <p class="note">Match is cosine similarity of the two players' playstyle profiles, each measured against the league that season.</p>
+  </div>
+  <div class="charts">
+    {% if matches %}
+    <figure>
+      <img src="{{ url_for('radar', player=p.player, season=p.season, vs=matches[0].player, vs_season=matches[0].season) }}" alt="Playstyle profile of {{ p.player }} compared with {{ matches[0].player }}">
+      <figcaption>{{ p.player }} against his closest match. Zero is league average.</figcaption>
+    </figure>
+    {% endif %}
+    <figure>
+      <img src="{{ url_for('map_chart', player=p.player, season=p.season, scope=scope) }}" alt="Playstyle map highlighting {{ p.player }} and his five closest matches">
+      <figcaption>Where he and his five closest matches sit on the playstyle map.</figcaption>
+    </figure>
+  </div>
+</section>
+{% endblock %}

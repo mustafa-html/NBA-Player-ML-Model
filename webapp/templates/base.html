@@ -1,0 +1,25 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{% block title %}NBA Playstyle Similarity Engine{% endblock %}</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500&family=Oswald:wght@400;500&display=swap">
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+  <header class="site">
+    <a class="brand" href="{{ url_for('index') }}">Playstyle Similarity Engine</a>
+    <form class="search" action="{{ url_for('player_page') }}" method="get">
+      <label for="q" class="sr-only">Player</label>
+      <input id="q" name="name" list="players" placeholder="Search a player" required value="{{ request.args.get('name', '') }}">
+      <button type="submit">Find matches</button>
+    </form>
+  </header>
+  <datalist id="players">{% for n in all_names %}<option value="{{ n }}">{% endfor %}</datalist>
+  <main>{% block content %}{% endblock %}</main>
+  <footer>Stats: Basketball Reference via the sumitrodatta/bball-reference-datasets mirror. Seasons are labelled by the year they ended.</footer>
+</body>
+</html>
